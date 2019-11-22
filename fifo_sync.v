@@ -13,45 +13,43 @@ assign empty=(counter_status==0);
 
 //status_counter
 always @(posedge clk,negedge rst)begin
-if(!rst)begin
+if(!rst)
 counter_status<=1'b0;
-end
 else begin
-  if((!empty&&rd_en)&&(!full&&wr_en))
-    counter_status<=counter_status;
-  else begin 
-    if(!empty&&rd_en) 
-    counter_status<=counter_status-1;
-    if(!full&&wr_en) 
-    counter_status<=counter_status+1;
-    end
-   end
+if((!empty&&rd_en)&&(!full&&wr_en))
+counter_status<=counter_status;
+else begin
+if(!empty&&rd_en)
+counter_status<=counter_status-1;
+if(!full&&wr_en) 
+counter_status<=counter_status+1;
 end
-
-//write pointer and read pointer
-always @(posedge clk,negedge rst)begin
+end
+  
+//read pointer//write pointer
+always @(posedge clk,negedge rst)
+begin
 if(!rst)begin
-wr_ptr<=0;
 rd_ptr<=0;
-end
+wr_ptr<=0;end
 else begin
-  if(!full&&wr_en) begin
-    wr_ptr<=wr_ptr+1;end
-  if(!empty&&rd_en)begin
-    rd_ptr<=rd_ptr+1;end
+if(!empty&&rd_en)begin
+rd_ptr<=rd_ptr+1;end
+if(!full&&wr_en) begin
+wr_ptr<=wr_ptr+1;end
 end
 end
 
-//read data from fifo and write data in fifo
+//read data from fifo//write data in fifo
 always @(posedge clk,negedge rst)begin
 if(!rst)
-  data_out<=0;end
+data_out<=0;
 else begin
-  if(!empty&&rd_en) 
-    data_out<=fifo[rd_ptr];
-  if(!full&&wr_en) 
-    fifo[wr_ptr]<=data_in;
-  end
+if(!empty&&rd_en)
+data_out<=fifo[rd_ptr];
+if(!full&&wr_en) 
+fifo[wr_ptr]<=data_in;
+end
 end
 
 //clogb2
@@ -63,6 +61,5 @@ for(clogb2=0;depth1>0;clogb2=clogb2+1)
 depth1 = depth1 >> 1;
 end
 endfunction
-
 
 endmodule
