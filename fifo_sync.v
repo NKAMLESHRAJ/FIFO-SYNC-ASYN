@@ -17,61 +17,41 @@ if(!rst)begin
 counter_status<=1'b0;
 end
 else begin
-if((!empty&&rd_en)&&(!full&&wr_en))begin
-counter_status<=counter_status;
+  if((!empty&&rd_en)&&(!full&&wr_en))
+    counter_status<=counter_status;
+  else begin 
+    if(!empty&&rd_en) 
+    counter_status<=counter_status-1;
+    if(!full&&wr_en) 
+    counter_status<=counter_status+1;
+    end
+   end
 end
-else if(!empty&&rd_en) begin
-counter_status<=counter_status-1;
-end
-else if(!full&&wr_en) begin
-counter_status<=counter_status+1;
-end
-end
-end
-//read pointer
-always @(posedge clk,negedge rst)
-begin
-if(!rst)
+
+//write pointer and read pointer
+always @(posedge clk,negedge rst)begin
+if(!rst)begin
+wr_ptr<=0;
 rd_ptr<=0;
-else if(!empty&&rd_en)begin
-//rd_ptr<=counter_status; 
-rd_ptr<=rd_ptr+1;end
-//else
-//rd_ptr<=counter_status;
 end
-
-//write pointer
-always @(posedge clk,negedge rst)begin
-if(!rst)begin
-wr_ptr<=0;end
 else begin
-if(!full&&wr_en) begin
-wr_ptr<=wr_ptr+1;end
-//else
-//wr_ptr<=counter_status;
+  if(!full&&wr_en) begin
+    wr_ptr<=wr_ptr+1;end
+  if(!empty&&rd_en)begin
+    rd_ptr<=rd_ptr+1;end
 end
 end
 
-//read data from fifo
+//read data from fifo and write data in fifo
 always @(posedge clk,negedge rst)begin
-if(!rst)begin
-data_out<=0;end
+if(!rst)
+  data_out<=0;end
 else begin
-if(!empty&&rd_en) begin
-data_out<=fifo[rd_ptr];
-end
-end
-end
-
-//write data in fifo
-always @(posedge clk,negedge rst)
-begin
-/*if(!rst)begin
-data_out<=0;end
-else begin*/
-if(!full&&wr_en) begin
-fifo[wr_ptr]<=data_in;
-end
+  if(!empty&&rd_en) 
+    data_out<=fifo[rd_ptr];
+  if(!full&&wr_en) 
+    fifo[wr_ptr]<=data_in;
+  end
 end
 
 //clogb2
