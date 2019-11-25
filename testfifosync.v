@@ -2,7 +2,8 @@ module testfifosync();
 
 parameter depth=8;
 parameter width=8;
-
+
+
 wire empty,full;
 wire [clogb2(depth):0]counter_status;
 wire [width-1:0]data_out;
@@ -71,7 +72,8 @@ fork
 push(30);
 pop(reg_data);
 join
-fork
+
+fork
 push(40);
 pop(reg_data);
 join
@@ -91,12 +93,14 @@ for(clogb2=0;depth1>0;clogb2=clogb2+1)
 depth1 = depth1 >> 1;
 end
 endfunction
-
+
+
 //push
 task push;
 input [width-1:0]in;
 begin
-if(full)$display("%t--full",$time);
+if(full)
+$display("%t--full",$time);
 else begin
 data_in<=in;
 wr_en<=1;
@@ -110,7 +114,8 @@ endtask
 task pop;
 output [width-1:0]out;
 begin
-if(empty)$display("%t--empty",$time);
+if(empty)
+$display("%t--empty",$time);
 else begin
 rd_en<=1;
 @(posedge clk);
@@ -119,5 +124,5 @@ out=data_out;
 end
 end
 endtask
-
+ 
 endmodule
