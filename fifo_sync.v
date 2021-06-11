@@ -14,7 +14,7 @@ assign empty=(counter_status==0);
 //status_counter
 always @(posedge clk,negedge rst)begin
 if(!rst)
-counter_status<=1'b0;
+counter_status<=8'b0;
 else begin
 if((!empty&&rd_en)&&(!full&&wr_en))
 counter_status<=counter_status;
